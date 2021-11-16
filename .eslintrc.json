@@ -19,6 +19,6 @@
     ],
     "rules": {
           "react/jsx-filename-extension": [0, { "allow": "as-needed" }],
-          "func-names": ["error", "as-needed"]
+          "func-names": ["error", "as-needed"],
     }
 }

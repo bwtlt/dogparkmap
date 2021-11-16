@@ -1,9 +1,32 @@
-import React, { useState } from 'react';
+import React, {
+  useState,
+} from 'react';
 import {
-  MapContainer, TileLayer, Marker, Popup,
+  MapContainer, TileLayer, Marker, Popup, useMapEvents,
 } from 'react-leaflet';
 import './Map.css';
 import * as parkData from './data/parks.json';
+
+const ClickHandler = function () {
+  const [position, setPosition] = useState(null);
+
+  const map = useMapEvents({
+    click: (location) => {
+      setPosition(location.latlng);
+      map.flyTo(location.latlng, map.getZoom());
+    },
+    locationfound: (location) => {
+      setPosition(location.latlng);
+      map.flyTo(location.latlng, map.getZoom());
+    },
+  });
+
+  return position === null ? null : (
+    <Marker position={position}>
+      <Popup>You clicked here.</Popup>
+    </Marker>
+  );
+};
 
 const Map = function () {
   const [activePark, setActivePark] = useState(null);
@@ -51,6 +74,7 @@ const Map = function () {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
+      <ClickHandler />
     </MapContainer>
   );
 };
