@@ -1,14 +1,30 @@
-import React, {
-  useState,
-} from 'react';
+import React, { useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import {
-  MapContainer, TileLayer, Marker, Popup, useMapEvents,
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMapEvents,
 } from 'react-leaflet';
+import PropTypes from 'prop-types';
 import './Map.css';
 import * as parkData from './data/parks.json';
 
 const ClickHandler = function () {
   const [position, setPosition] = useState(null);
+
+  const closeButtonCallback = () => {
+    console.log('bye');
+    setPosition(null);
+  };
+
+  const checkButtonCallback = () => {
+    console.log('hi');
+    setPosition(null);
+  };
 
   const map = useMapEvents({
     click: (location) => {
@@ -22,10 +38,51 @@ const ClickHandler = function () {
   });
 
   return position === null ? null : (
-    <Marker position={position}>
-      <Popup>You clicked here.</Popup>
-    </Marker>
+    <AddParkModal
+      closeCallback={closeButtonCallback}
+      checkCallback={checkButtonCallback}
+    />
   );
+};
+
+const AddParkModal = function ({ closeCallback, checkCallback }) {
+  return (
+    <Modal show onHide={closeCallback}>
+      <Modal.Header closeButton>
+        <Modal.Title>Ajouter un parc</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Nom du parc</Form.Label>
+            <Form.Control type="text" placeholder="Entrez le nom du parc" />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formBasicCheckbox">
+            <Form.Check type="checkbox" label="Chiens détachés autorisés" />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={closeCallback}>
+          Close
+        </Button>
+        <Button variant="primary" type="submit" onClick={checkCallback}>
+          Save Changes
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
+AddParkModal.propTypes = {
+  closeCallback: PropTypes.func,
+  checkCallback: PropTypes.func,
+};
+
+AddParkModal.defaultProps = {
+  closeCallback: () => {},
+  checkCallback: () => {},
 };
 
 const Map = function () {
@@ -34,11 +91,7 @@ const Map = function () {
   const MAP_CENTER = [45.4394, 4.3871];
 
   return (
-    <MapContainer
-      center={MAP_CENTER}
-      zoom={12}
-      scrollWheelZoom
-    >
+    <MapContainer className="container" center={MAP_CENTER} zoom={12} scrollWheelZoom>
       {parkData.features.map((park) => (
         <Marker
           key={park.properties.PARK_ID}

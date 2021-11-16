@@ -6,8 +6,8 @@ const App = function () {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Title</h1>
-        <p>Paragraph paragraph paragraph</p>
+        <h1>Dog Park Map</h1>
+        <p>Trouvez un endroit où vous promener avec votre chien</p>
       </header>
       <Map />
     </div>
