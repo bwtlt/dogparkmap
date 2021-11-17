@@ -12,6 +12,11 @@ const App = function () {
       </header>
       <Instructions />
       <Map />
+      <div>
+        Developpé par
+        { ' ' }
+        <a href="https://bwatelet.fr">bwatelet.fr</a>
+      </div>
     </div>
   );
 };

@@ -15,6 +15,9 @@ import PropTypes from 'prop-types';
 import './Map.css';
 import NewParkModal from './NewParkModal';
 
+const MAP_CENTER = [45.4394, 4.3871];
+const WEBHOOK_URL = 'https://webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-kmwss/service/DogParkMap/incoming_webhook/parks';
+
 const ClickHandler = function () {
   const [position, setPosition] = useState(null);
 
@@ -23,7 +26,10 @@ const ClickHandler = function () {
   };
 
   const checkButtonCallback = async (name) => {
-    await axios.post('http://localhost:8888/parks/add', { name, position: [position.lat.toString(), position.lng.toString()] });
+    await axios.post(
+      WEBHOOK_URL,
+      { name, position: [position.lat.toString(), position.lng.toString()] },
+    );
     setPosition(null);
   };
 
@@ -41,8 +47,6 @@ const ClickHandler = function () {
     />
   );
 };
-
-const MAP_CENTER = [45.4394, 4.3871];
 
 const FlyToButton = function ({ map }) {
   return (
@@ -86,8 +90,9 @@ class Map extends Component {
   async getAllParks() {
     this.setState({ loading: true });
     try {
-      const response = await axios.get('http://localhost:8888/parks');
-      this.setState({ data: response.data });
+      const response = await axios.get(WEBHOOK_URL);
+      const json = await response.data;
+      this.setState({ data: json });
     } catch (error) {
       this.setState({ error: true });
     } finally {
@@ -121,9 +126,9 @@ class Map extends Component {
           scrollWheelZoom
           whenCreated={(m) => { this.setState({ map: m }); }}
         >
-          {data.map((park) => (
+          {data.length > 0 && data.map((park) => (
             <Marker
-              key={park._id}
+              key={park._id.$oid}
               position={[park.position[0], park.position[1]]}
               eventHandlers={{
                 click: () => {
