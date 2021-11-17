@@ -38,15 +38,11 @@ class NewParkModal extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Chiens détachés autorisés" />
-            </Form.Group>
             <Button variant="secondary" onClick={closeCallback}>
-              Close
+              Annuler
             </Button>
             <Button variant="primary" type="submit">
-              Save Changes
+              Ajouter
             </Button>
           </Form>
         </Modal.Body>
