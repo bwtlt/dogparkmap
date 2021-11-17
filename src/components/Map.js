@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
+import React, {
+  Component, useState,
+} from 'react';
+import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
 import {
   MapContainer,
   TileLayer,
@@ -11,18 +13,17 @@ import {
 } from 'react-leaflet';
 import PropTypes from 'prop-types';
 import './Map.css';
-import * as parkData from './data/parks.json';
+import NewParkModal from './NewParkModal';
 
 const ClickHandler = function () {
   const [position, setPosition] = useState(null);
 
   const closeButtonCallback = () => {
-    console.log('bye');
     setPosition(null);
   };
 
-  const checkButtonCallback = () => {
-    console.log('hi');
+  const checkButtonCallback = async (name) => {
+    await axios.post('http://localhost:8888/parks/add', { name, position: [position.lat.toString(), position.lng.toString()] });
     setPosition(null);
   };
 
@@ -31,105 +32,129 @@ const ClickHandler = function () {
       setPosition(location.latlng);
       map.flyTo(location.latlng, map.getZoom());
     },
-    locationfound: (location) => {
-      setPosition(location.latlng);
-      map.flyTo(location.latlng, map.getZoom());
-    },
   });
 
   return position === null ? null : (
-    <AddParkModal
+    <NewParkModal
       closeCallback={closeButtonCallback}
       checkCallback={checkButtonCallback}
     />
   );
 };
 
-const AddParkModal = function ({ closeCallback, checkCallback }) {
-  return (
-    <Modal show onHide={closeCallback}>
-      <Modal.Header closeButton>
-        <Modal.Title>Ajouter un parc</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Label>Nom du parc</Form.Label>
-            <Form.Control type="text" placeholder="Entrez le nom du parc" />
-          </Form.Group>
+const MAP_CENTER = [45.4394, 4.3871];
 
-          <Form.Group className="mb-3" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Chiens détachés autorisés" />
-          </Form.Group>
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={closeCallback}>
-          Close
-        </Button>
-        <Button variant="primary" type="submit" onClick={checkCallback}>
-          Save Changes
-        </Button>
-      </Modal.Footer>
-    </Modal>
+const FlyToButton = function ({ map }) {
+  return (
+    <Button
+      onClick={() => {
+        map.locate().on('locationfound', (e) => {
+          map.flyTo(e.latlng, map.getZoom());
+        });
+      }}
+    >
+      Centrer sur votre position
+    </Button>
   );
 };
 
-AddParkModal.propTypes = {
-  closeCallback: PropTypes.func,
-  checkCallback: PropTypes.func,
+FlyToButton.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  map: PropTypes.object,
 };
 
-AddParkModal.defaultProps = {
-  closeCallback: () => {},
-  checkCallback: () => {},
+FlyToButton.defaultProps = {
+  map: null,
 };
 
-const Map = function () {
-  const [activePark, setActivePark] = useState(null);
+class Map extends Component {
+  constructor() {
+    super();
+    this.state = {
+      error: false,
+      loading: true,
+      data: null,
+      activePark: null,
+      map: null,
+    };
+  }
 
-  const MAP_CENTER = [45.4394, 4.3871];
+  componentDidMount() {
+    this.getAllParks();
+  }
 
-  return (
-    <MapContainer className="container" center={MAP_CENTER} zoom={12} scrollWheelZoom>
-      {parkData.features.map((park) => (
-        <Marker
-          key={park.properties.PARK_ID}
-          position={[
-            park.geometry.coordinates[0],
-            park.geometry.coordinates[1],
-          ]}
-          eventHandlers={{
-            click: () => {
-              setActivePark(park);
-            },
-          }}
-        />
-      ))}
+  async getAllParks() {
+    this.setState({ loading: true });
+    try {
+      const response = await axios.get('http://localhost:8888/parks');
+      this.setState({ data: response.data });
+    } catch (error) {
+      this.setState({ error: true });
+    } finally {
+      this.setState({ loading: false });
+    }
+  }
 
-      {activePark && (
-        <Popup
-          position={[
-            activePark.geometry.coordinates[0],
-            activePark.geometry.coordinates[1],
-          ]}
-          onClose={() => {
-            setActivePark(null);
-          }}
+  render() {
+    const {
+      error, loading, data, activePark, map,
+    } = this.state;
+
+    if (loading) {
+      return (
+        <Spinner animation="border" role="status" className="container">
+          <span className="visually-hidden">Chargement...</span>
+        </Spinner>
+      );
+    }
+
+    if (error || data === null) {
+      return <div>Erreur de chargement des données</div>;
+    }
+
+    return (
+      <div className="container">
+        <FlyToButton map={map} />
+        <MapContainer
+          center={MAP_CENTER}
+          zoom={12}
+          scrollWheelZoom
+          whenCreated={(m) => { this.setState({ map: m }); }}
         >
-          <div>
-            <h2>{activePark.properties.NAME}</h2>
-            <p>{activePark.properties.DESCRIPTION}</p>
-          </div>
-        </Popup>
-      )}
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <ClickHandler />
-    </MapContainer>
-  );
-};
+          {data.map((park) => (
+            <Marker
+              key={park._id}
+              position={[park.position[0], park.position[1]]}
+              eventHandlers={{
+                click: () => {
+                  this.setState({ activePark: park });
+                },
+              }}
+            />
+          ))}
+
+          {activePark && (
+            <Popup
+              position={[activePark.position[0], activePark.position[1]]}
+              onClose={() => {
+                this.setState({ activePark: null });
+              }}
+            >
+              <div>
+                <h2>{activePark.name}</h2>
+                <p>{activePark.description}</p>
+              </div>
+            </Popup>
+          )}
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <ClickHandler />
+        </MapContainer>
+      </div>
+    );
+  }
+}
 
 export default Map;
