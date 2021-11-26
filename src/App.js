@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import Map from './components/Map';
 import Instructions from './components/Instructions';
 

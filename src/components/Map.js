@@ -12,10 +12,9 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 import PropTypes from 'prop-types';
-import './Map.css';
 import NewParkModal from './NewParkModal';
 
-const MAP_CENTER = [45.4394, 4.3871];
+const MAP_CENTER = [46.756, 3.445];
 const WEBHOOK_URL = 'https://webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-kmwss/service/DogParkMap/incoming_webhook/parks';
 
 const ClickHandler = function () {
@@ -122,7 +121,7 @@ class Map extends Component {
         <FlyToButton map={map} />
         <MapContainer
           center={MAP_CENTER}
-          zoom={12}
+          zoom={6}
           scrollWheelZoom
           whenCreated={(m) => { this.setState({ map: m }); }}
         >
