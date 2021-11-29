@@ -2,9 +2,12 @@ import {
   React, useState, useEffect, useMemo,
 } from 'react';
 import * as Realm from 'realm-web';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Map from './components/Map';
 import MongoContext from './MongoContext';
-import Instructions from './components/Instructions';
+import Authentication from './components/Authentication';
+import LogOut from './components/Logout';
+import Navigation from './components/Navigation';
 
 const App = function () {
   const [client, setClient] = useState(null);
@@ -49,15 +52,22 @@ const App = function () {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Dog Park Map</h1>
-        <p>Trouvez un endroit où vous promener avec votre chien</p>
+        <h1>H1</h1>
+        <p>PPPPPP</p>
       </header>
-      <MongoContext.Provider
-        value={memoHook}
-      >
-        <Instructions />
-        {renderComponent(Map)}
-      </MongoContext.Provider>
+      <BrowserRouter>
+        <Navigation user={user} />
+        <MongoContext.Provider
+          value={memoHook}
+        >
+          <Routes>
+            <Route path="/signup" element={renderComponent(Authentication, { type: 'create' })} />
+            <Route path="/signin" element={renderComponent(Authentication)} />
+            <Route path="/logout" element={renderComponent(LogOut)} />
+            <Route path="/" element={renderComponent(Map)} />
+          </Routes>
+        </MongoContext.Provider>
+      </BrowserRouter>
       <div>
         Developpé par
         { ' ' }

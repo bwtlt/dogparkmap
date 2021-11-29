@@ -13,6 +13,7 @@ import {
 import PropTypes from 'prop-types';
 import Loading from './Loading';
 import NewParkModal from './NewParkModal';
+import Instructions from './Instructions';
 
 const MAP_CENTER = [46.756, 3.445];
 const WEBHOOK_URL = 'https://webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-kmwss/service/DogParkMap/incoming_webhook/parks';
@@ -109,6 +110,7 @@ const Map = function ({ mongoContext: { client, user } }) {
 
   return (
     <div className="container">
+      <Instructions />
       <FlyToButton map={map} />
       <MapContainer
         center={MAP_CENTER}
