@@ -15,7 +15,7 @@ const userSchema = yup.object().shape({
 
 const Authentication = function ({ mongoContext: { app, user, setUser }, type }) {
   const [loading, setLoading] = useState(false);
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const submitHandler = async (values) => {
     setLoading(true);
@@ -35,9 +35,9 @@ const Authentication = function ({ mongoContext: { app, user, setUser }, type })
 
   useEffect(() => {
     if (!isAnon(user)) {
-      history.push('/');
+      navigate('/', { replace: true });
     }
-  }, [history, user]);
+  }, [navigate, user]);
 
   return (
     <Formik

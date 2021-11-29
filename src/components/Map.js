@@ -1,7 +1,6 @@
 import React, {
   useState, useEffect,
 } from 'react';
-import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import {
   MapContainer,
@@ -16,9 +15,10 @@ import NewParkModal from './NewParkModal';
 import Instructions from './Instructions';
 
 const MAP_CENTER = [46.756, 3.445];
-const WEBHOOK_URL = 'https://webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-kmwss/service/DogParkMap/incoming_webhook/parks';
+const db = 'dogparkmap';
+const collection = 'parks';
 
-const ClickHandler = function () {
+const ClickHandler = function ({ client }) {
   const [position, setPosition] = useState(null);
 
   const closeButtonCallback = () => {
@@ -26,10 +26,11 @@ const ClickHandler = function () {
   };
 
   const checkButtonCallback = async (name) => {
-    await axios.post(
-      WEBHOOK_URL,
-      { name, position: [position.lat.toString(), position.lng.toString()] },
-    );
+    const parks = client.db(db).collection(collection);
+    await parks.insertOne({
+      name,
+      position: [position.lat.toString(), position.lng.toString()],
+    });
     setPosition(null);
   };
 
@@ -46,6 +47,11 @@ const ClickHandler = function () {
       checkCallback={checkButtonCallback}
     />
   );
+};
+
+ClickHandler.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  client: PropTypes.object.isRequired,
 };
 
 const FlyToButton = function ({ map }) {
@@ -78,15 +84,12 @@ const Map = function ({ mongoContext: { client, user } }) {
   const [map, setMap] = useState(null);
   const [activePark, setActivePark] = useState(null);
 
-  const db = 'dogparkmap';
-  const collection = 'parks';
-
   useEffect(() => {
     async function getAllParks() {
       setLoading(true);
       try {
-        const rests = client.db(db).collection(collection);
-        setData((await rests.find()).slice(0, 10));
+        const parks = client.db(db).collection(collection);
+        setData((await parks.find()).slice(0, 10));
         setLoading(false);
       } catch (errorCode) {
         setError(true);
@@ -150,7 +153,7 @@ const Map = function ({ mongoContext: { client, user } }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        <ClickHandler />
+        <ClickHandler client={client} />
       </MapContainer>
     </div>
   );

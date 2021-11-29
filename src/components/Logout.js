@@ -6,10 +6,10 @@ import Loading from './Loading';
 import { isAnon } from '../utils';
 
 const LogOut = function ({ mongoContext: { app, setUser, setClient } }) {
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   if (isAnon()) {
-    history.push('/');
+    navigate('/', { replace: true });
   }
 
   useEffect(() => {
