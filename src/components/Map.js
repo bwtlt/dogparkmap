@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import Loading from './Loading';
 import NewParkModal from './NewParkModal';
 import Instructions from './Instructions';
+import { isAnon } from '../utils';
 
 const MAP_CENTER = [46.756, 3.445];
 const db = 'dogparkmap';
@@ -153,7 +154,7 @@ const Map = function ({ mongoContext: { client, user } }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        <ClickHandler client={client} />
+        { !isAnon(user) && <ClickHandler client={client} />}
       </MapContainer>
     </div>
   );
