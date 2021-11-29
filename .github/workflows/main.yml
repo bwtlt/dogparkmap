@@ -26,4 +26,4 @@ jobs:
         server: ${{ secrets.FTP_SERVER}}
         username: ${{ secrets.FTP_USERNAME}}
         password: ${{ secrets.FTP_PASS}}
-        server-dir: public_html/dogparkmap
+        server-dir: public_html/dogparkmap/
