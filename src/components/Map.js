@@ -1,10 +1,8 @@
-import * as Realm from 'realm-web';
 import React, {
   useState, useEffect,
 } from 'react';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import Spinner from 'react-bootstrap/Spinner';
 import {
   MapContainer,
   TileLayer,
@@ -13,11 +11,11 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 import PropTypes from 'prop-types';
+import Loading from './Loading';
 import NewParkModal from './NewParkModal';
 
 const MAP_CENTER = [46.756, 3.445];
 const WEBHOOK_URL = 'https://webhooks.mongodb-realm.com/api/client/v2.0/app/application-0-kmwss/service/DogParkMap/incoming_webhook/parks';
-const app = new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID });
 
 const ClickHandler = function () {
   const [position, setPosition] = useState(null);
@@ -72,14 +70,13 @@ FlyToButton.defaultProps = {
   map: null,
 };
 
-const Map = function () {
+const Map = function ({ mongoContext: { client, user } }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState([]);
   const [map, setMap] = useState(null);
   const [activePark, setActivePark] = useState(null);
 
-  const atlas = 'mongodb-atlas';
   const db = 'dogparkmap';
   const collection = 'parks';
 
@@ -87,7 +84,6 @@ const Map = function () {
     async function getAllParks() {
       setLoading(true);
       try {
-        const client = app.currentUser.mongoClient(atlas);
         const rests = client.db(db).collection(collection);
         setData((await rests.find()).slice(0, 10));
         setLoading(false);
@@ -96,16 +92,14 @@ const Map = function () {
       }
     }
 
-    if (loading) {
+    if (loading && user && client) {
       getAllParks();
     }
-  }, [loading]);
+  }, [client, loading, user]);
 
   if (loading) {
     return (
-      <Spinner animation="border" role="status" className="container">
-        <span className="visually-hidden">Chargement...</span>
-      </Spinner>
+      <Loading />
     );
   }
 
@@ -158,6 +152,11 @@ const Map = function () {
       </MapContainer>
     </div>
   );
+};
+
+Map.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  mongoContext: PropTypes.object.isRequired,
 };
 
 export default Map;
