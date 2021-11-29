@@ -68,7 +68,7 @@ const App = function () {
           </Routes>
         </MongoContext.Provider>
       </BrowserRouter>
-      <div>
+      <div className="fixed-bottom">
         Developpé par
         { ' ' }
         <a href="https://bwatelet.fr">bwatelet.fr</a>
