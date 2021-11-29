@@ -8,10 +8,6 @@ import { isAnon } from '../utils';
 const LogOut = function ({ mongoContext: { app, setUser, setClient } }) {
   const navigate = useNavigate();
 
-  if (isAnon()) {
-    navigate('/', { replace: true });
-  }
-
   useEffect(() => {
     async function logout() {
       await app.currentUser.logOut();
@@ -22,6 +18,10 @@ const LogOut = function ({ mongoContext: { app, setUser, setClient } }) {
     }
 
     logout();
+
+    if (isAnon()) {
+      navigate('/', { replace: true });
+    }
   }, [app, setClient, setUser]);
 
   return (
