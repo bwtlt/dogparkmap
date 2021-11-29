@@ -23,7 +23,7 @@ jobs:
     - name: FTP upload
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
-        server: ${{ secrets.FTP_SERVER}}
-        username: ${{ secrets.FTP_USERNAME}}
-        password: ${{ secrets.FTP_PASS}}
+        server: ${{secrets.FTP_SERVER}}
+        username: ${{secrets.FTP_USERNAME}}
+        password: ${{secrets.FTP_PASS}}
         server-dir: public_html/dogparkmap/
