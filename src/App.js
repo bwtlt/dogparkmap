@@ -52,8 +52,8 @@ const App = function () {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>H1</h1>
-        <p>PPPPPP</p>
+        <h1>Dog Park Map</h1>
+        <p>Trouvez un endroit où vous promener avec votre chien</p>
       </header>
       <BrowserRouter>
         <Navigation user={user} />
