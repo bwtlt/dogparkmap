@@ -12,7 +12,7 @@ import Navigation from './components/Navigation';
 const App = function () {
   const [client, setClient] = useState(null);
   const [user, setUser] = useState(null);
-  const [app, setApp] = useState(new Realm.App({ id: process.env.REACT_APP_REALM_APP_ID }));
+  const [app, setApp] = useState(new Realm.App({ id: 'application-0-kmwss' }));
 
   useEffect(() => {
     async function init() {
