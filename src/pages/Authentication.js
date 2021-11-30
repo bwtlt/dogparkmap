@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import * as Realm from 'realm-web';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import Loading from './Loading';
+import Loading from '../components/Loading';
 import { isAnon } from '../utils';
 
 const userSchema = yup.object().shape({

@@ -2,7 +2,7 @@ import { React, useEffect } from 'react';
 import * as Realm from 'realm-web';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Loading from './Loading';
+import Loading from '../components/Loading';
 import { isAnon } from '../utils';
 
 const LogOut = function ({ mongoContext: { app, setUser, setClient } }) {

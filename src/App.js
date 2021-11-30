@@ -3,10 +3,10 @@ import {
 } from 'react';
 import * as Realm from 'realm-web';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Map from './components/Map';
 import MongoContext from './MongoContext';
-import Authentication from './components/Authentication';
-import LogOut from './components/Logout';
+import Map from './pages/Map';
+import Authentication from './pages/Authentication';
+import LogOut from './pages/Logout';
 import Navigation from './components/Navigation';
 
 const App = function () {

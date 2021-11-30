@@ -10,9 +10,9 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 import PropTypes from 'prop-types';
-import Loading from './Loading';
-import NewParkModal from './NewParkModal';
-import Instructions from './Instructions';
+import Loading from '../components/Loading';
+import NewParkModal from '../components/NewParkModal';
+import Instructions from '../components/Instructions';
 import { isAnon } from '../utils';
 
 const MAP_CENTER = [46.756, 3.445];
