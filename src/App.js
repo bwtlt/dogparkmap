@@ -7,6 +7,7 @@ import MongoContext from './MongoContext';
 import Map from './pages/Map';
 import Authentication from './pages/Authentication';
 import LogOut from './pages/Logout';
+import Help from './pages/Help';
 import Navigation from './components/Navigation';
 
 const App = function () {
@@ -63,6 +64,7 @@ const App = function () {
             <Route path="/signup" element={renderComponent(Authentication, { type: 'create' })} />
             <Route path="/login" element={renderComponent(Authentication)} />
             <Route path="/logout" element={renderComponent(LogOut)} />
+            <Route path="/help" element={renderComponent(Help)} />
             <Route path="/" element={renderComponent(Map)} />
           </Routes>
         </MongoContext.Provider>

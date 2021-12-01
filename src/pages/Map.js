@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import Loading from '../components/Loading';
 // import NewParkModal from '../components/NewParkModal';
-import Instructions from '../components/Instructions';
 import GeoSearchBar from '../components/GeoSearchBar';
 import FlyToButton from '../components/FlyToButton';
 import { isAnon } from '../utils';
@@ -99,7 +98,6 @@ const Map = function ({ mongoContext: { client, user } }) {
 
   return (
     <div className="container">
-      <Instructions />
       <MapContainer
         center={MAP_CENTER}
         zoom={6}

@@ -16,7 +16,7 @@ const FlyToButton = function () {
       map.locate().on('locationfound', (e) => {
         map.flyTo(e.latlng, 12);
       });
-    });
+    }, 'Centrer sur votre position');
 
     map.addControl(button);
 

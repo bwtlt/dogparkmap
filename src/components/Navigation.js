@@ -15,6 +15,7 @@ const Navigation = function ({ user }) {
           {!loggedIn && <NavLink to="/signup" className="nav-link">Sign Up</NavLink>}
           {!loggedIn && <NavLink to="/login" className="nav-link">Log In</NavLink>}
           {loggedIn && <NavLink to="/logout" className="nav-link">Log out</NavLink>}
+          <NavLink to="/help" className="nav-link">Help</NavLink>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

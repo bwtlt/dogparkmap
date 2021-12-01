@@ -59,7 +59,7 @@ const Authentication = function ({ mongoContext: { app, user, setUser }, type })
           <Form noValidate onSubmit={handleSubmit} className="container">
             {loading && <Loading />}
             {!loading && (
-              <div className="auth-form">
+              <div className="text-page">
                 <h1>{isLogIn(type) ? 'Log In' : 'Sign Up'}</h1>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Email address</Form.Label>

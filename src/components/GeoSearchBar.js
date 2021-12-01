@@ -11,6 +11,7 @@ const GeoSearchBar = function () {
     const searchControl = new GeoSearchControl({
       provider,
       showMarker: false,
+      searchLabel: 'Chercher une adresse',
     });
 
     map.addControl(searchControl);
