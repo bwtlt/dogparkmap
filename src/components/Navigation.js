@@ -1,21 +1,20 @@
 import React from 'react';
 import { Nav, Navbar } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { isAnon } from '../utils';
 
 const Navigation = function ({ user }) {
   const loggedIn = !isAnon(user);
   return (
-    <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="#home">Dog Park Map</Navbar.Brand>
+    <Navbar bg="light" expand="lg" className="container">
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <Link to="/" className="mx-2">Home</Link>
-          {!loggedIn && <Link to="/signup" className="mx-2">Sign Up</Link>}
-          {!loggedIn && <Link to="/signin" className="mx-2">Sign In</Link>}
-          {loggedIn && <Link to="/logout" className="mx-2">Log out</Link>}
+          <NavLink to="/" className="nav-link">Home</NavLink>
+          {!loggedIn && <NavLink to="/signup" className="nav-link">Sign Up</NavLink>}
+          {!loggedIn && <NavLink to="/login" className="nav-link">Log In</NavLink>}
+          {loggedIn && <NavLink to="/logout" className="nav-link">Log out</NavLink>}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

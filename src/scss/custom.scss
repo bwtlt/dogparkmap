@@ -1,5 +1,7 @@
-@import "../../node_modules/bootstrap/scss/bootstrap";
-@import url("https://unpkg.com/leaflet@1.6.0/dist/leaflet.css");
+@use 'colors';
+@import '../../node_modules/bootstrap/scss/bootstrap';
+@import url('https://unpkg.com/leaflet@1.6.0/dist/leaflet.css');
+@import '../../node_modules/leaflet-geosearch/dist/geosearch.css';
 
 body {
   margin: 0;
@@ -16,42 +18,30 @@ code {
 }
 
 .App {
+  display: flex;
+  flex-direction: column;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
+  background-color: colors.get(primary, green-100);
+  color: colors.get(neutrals, grey-800);
   min-height: 10vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.app-subtitle {
+  font-weight: normal;
 }
 
 .App-link {
   color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .leaflet-container {
@@ -59,7 +49,102 @@ code {
   height: 600px;
 }
 
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10em;
+}
+
+.spinner-border {
+    display: inline-block;
+    width: 4rem;
+    height: 4rem;
+    vertical-align: -0.125em;
+    border: 0.5em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: 0.75s linear infinite spinner-border;
+}
+
 .instructions {
-    max-width: 80vw;
-    text-align: left;
+  max-width: 80vw;
+  text-align: left;
+}
+
+@media (max-width:  1200px) {
+  .navbar {
+    justify-content: flex-end;
+  }
+  .search-location {
+    max-width: 6rem;
+  }
+}
+
+.nav-link {
+  margin-left: 2rem;
+}
+
+.nav-link.active {
+  font-weight: 700;
+  border-bottom: .25rem solid;
+}
+
+.auth-form {
+  max-width: 1000px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer {
+  font-size: small;
+}
+
+.btn-toolbar {
+  margin-top: 10px;
+  margin-right: 10px;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.btn-group {
+  margin-right: 10px;
+}
+
+.control-button {
+  border: none;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  color: colors.get(neutrals, grey-800);
+  background-color: colors.get(primary, green-050);
+}
+
+.leaflet-touch .leaflet-bar {
+  background: none;
+  border: none;
+}
+
+.leaflet-control-zoom-out,
+.leaflet-control-zoom-in,
+.leaflet-geosearch-button {
+  @extend .control-button;
+}
+
+.leaflet-bar a {
+  @extend .control-button;
+}
+
+.leaflet-bar a:hover,
+.easy-button-button:hover {
+  color: colors.get(neutrals, grey-900);
+  background-color: colors.get(primary, green-400);
+}
+
+.easy-button-button {
+  @extend .control-button;
+  border-radius: 4px;
 }

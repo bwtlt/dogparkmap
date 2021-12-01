@@ -53,7 +53,6 @@ const App = function () {
     <div className="App">
       <header className="App-header">
         <h1>Dog Park Map</h1>
-        <p>Trouvez un endroit où vous promener avec votre chien</p>
       </header>
       <BrowserRouter>
         <Navigation user={user} />
@@ -62,13 +61,13 @@ const App = function () {
         >
           <Routes>
             <Route path="/signup" element={renderComponent(Authentication, { type: 'create' })} />
-            <Route path="/signin" element={renderComponent(Authentication)} />
+            <Route path="/login" element={renderComponent(Authentication)} />
             <Route path="/logout" element={renderComponent(LogOut)} />
             <Route path="/" element={renderComponent(Map)} />
           </Routes>
         </MongoContext.Provider>
       </BrowserRouter>
-      <div className="fixed-bottom">
+      <div className="footer fixed-bottom">
         Developpé par
         { ' ' }
         <a href="https://bwatelet.fr">bwatelet.fr</a>
