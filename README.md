@@ -7,8 +7,8 @@ Hosted [here](https://dogparkmap.bwatelet.fr).
 | Feature | Status |
 | --- | --- |
 | Locate parks around your location | Implemented |
-| Search for a location | Not implemented |
-| Add a park anywhere your want | In progress |
-| Create a user profile with secure authentication | In progess |
+| Search for a location | Implemented |
+| Add a park anywhere your want | Implemented |
+| Create a user profile with secure authentication | Implemented |
 | Modify a park properties | Not implemented |
 | Leave a review on a park | Not implemented |
