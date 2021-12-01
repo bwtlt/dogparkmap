@@ -33,7 +33,7 @@ code {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   padding-top: 10px;
-  padding-left: 10px;
+  padding-left: 20px;
 }
 
 .app-subtitle {
@@ -99,14 +99,22 @@ code {
 .btn-toolbar {
   margin-top: 10px;
   margin-right: 10px;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  right: 0;
+  display: flex;
+  justify-content: space-around;
 }
 
 .btn-group {
   margin-right: 10px;
+}
+
+.btn-primary {
+  background-color: colors.get(primary, green-500);
+  border-color: colors.get(primary, green-600);
+}
+
+.btn-primary:hover {
+  background-color: colors.get(primary, green-600);
+  border-color: colors.get(primary, green-900);
 }
 
 .control-button {

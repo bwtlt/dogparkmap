@@ -10,41 +10,21 @@ import {
 } from 'react-leaflet';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
+import Button from 'react-bootstrap/Button';
 import Loading from '../components/Loading';
-// import NewParkModal from '../components/NewParkModal';
+import NewParkModal from '../components/NewParkModal';
 import GeoSearchBar from '../components/GeoSearchBar';
 import FlyToButton from '../components/FlyToButton';
 import { isAnon } from '../utils';
-
-require('../media/pin.svg');
 
 const MAP_CENTER = [46.756, 3.445];
 const db = 'dogparkmap';
 const collection = 'parks';
 
-// eslint-disable-next-line no-unused-vars
-const ClickHandler = function ({ client, onClick }) {
-  // const [position, setPosition] = useState(null);
-
-  /*
-  const closeButtonCallback = () => {
-    setPosition(null);
-  };
-
-  const checkButtonCallback = async (name) => {
-    const parks = client.db(db).collection(collection);
-    await parks.insertOne({
-      name,
-      position: [position.lat.toString(), position.lng.toString()],
-    });
-    setPosition(null);
-  };
-  */
-
-  const map = useMapEvents({
+const ClickHandler = function ({ onClick }) {
+  useMapEvents({
     click: (location) => {
       onClick([location.latlng.lat, location.latlng.lng]);
-      map.flyTo(location.latlng, map.getZoom());
     },
   });
 
@@ -52,8 +32,6 @@ const ClickHandler = function ({ client, onClick }) {
 };
 
 ClickHandler.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  client: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
@@ -62,6 +40,8 @@ const Map = function ({ mongoContext: { client, user } }) {
   const [error, setError] = useState(false);
   const [data, setData] = useState([]);
   const [activePark, setActivePark] = useState(null);
+  const [newPark, setNewPark] = useState(null);
+  const [addPark, setAddPark] = useState(false);
 
   useEffect(() => {
     async function getAllParks() {
@@ -81,9 +61,20 @@ const Map = function ({ mongoContext: { client, user } }) {
   }, [client, loading, user]);
 
   const handleClick = (position) => {
-    const markers = data.slice();
-    markers.push({ _id: uuidv4(), position, temporary: true });
-    setData(markers);
+    setNewPark({ _id: uuidv4(), position });
+  };
+
+  const insertParkInDb = async (park) => {
+    const parks = client.db(db).collection(collection);
+    await parks.insertOne({
+      name: park.name,
+      description: park.description,
+      position: [newPark.position[0].toString(), newPark.position[1].toString()],
+      created: new Date().toISOString(),
+    });
+    setNewPark(null);
+    setAddPark(false);
+    setLoading(true);
   };
 
   if (loading) {
@@ -103,6 +94,18 @@ const Map = function ({ mongoContext: { client, user } }) {
         zoom={6}
         scrollWheelZoom
       >
+
+        {addPark
+        && (
+        <NewParkModal
+          closeCallback={() => {
+            setNewPark(null);
+            setAddPark(false);
+          }}
+          checkCallback={insertParkInDb}
+        />
+        )}
+
         {data.length > 0
         && data.map((park) => (
           <Marker
@@ -116,6 +119,17 @@ const Map = function ({ mongoContext: { client, user } }) {
           />
         ))}
 
+        {newPark && (
+          <Popup
+            position={[newPark.position[0], newPark.position[1]]}
+            onClose={() => {
+              setNewPark(null);
+            }}
+          >
+            <Button onClick={() => { setAddPark(true); }}>Ajouter un parc ici</Button>
+          </Popup>
+        )}
+
         {activePark && (
           <Popup
             position={[activePark.position[0], activePark.position[1]]}
@@ -124,7 +138,7 @@ const Map = function ({ mongoContext: { client, user } }) {
             }}
           >
             <div>
-              <h2>{activePark.name}</h2>
+              <h3>{activePark.name}</h3>
               <p>{activePark.description}</p>
             </div>
           </Popup>

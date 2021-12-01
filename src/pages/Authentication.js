@@ -60,12 +60,12 @@ const Authentication = function ({ mongoContext: { app, user, setUser }, type })
             {loading && <Loading />}
             {!loading && (
               <div className="text-page">
-                <h1>{isLogIn(type) ? 'Log In' : 'Sign Up'}</h1>
+                <h1>{isLogIn(type) ? 'Connexion' : 'Créer un compte'}</h1>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Email address</Form.Label>
+                  <Form.Label>Adresse e-mail</Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder="Enter email"
+                    placeholder="Entrez une adresse e-mail valide"
                     name="email"
                     autoComplete="username"
                     value={values.email}
@@ -73,15 +73,15 @@ const Authentication = function ({ mongoContext: { app, user, setUser }, type })
                     isValid={touched.email && !errors.email}
                   />
                   <Form.Text className="text-muted">
-                    We&apos;ll never share your email with anyone else.
+                    {isLogIn(type) ? '' : 'Nous ne partageons vos données avec personne.'}
                   </Form.Text>
                   <Form.Control.Feedback>{errors.email}</Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>Mot de passe</Form.Label>
                   <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder="Mot de passe"
                     name="password"
                     autoComplete="current-password"
                     value={values.password}
@@ -94,7 +94,7 @@ const Authentication = function ({ mongoContext: { app, user, setUser }, type })
                 </Form.Group>
                 <div className="text-center mt-2 mb-2">
                   <Button variant="primary" type="submit">
-                    Submit
+                    {isLogIn(type) ? 'Connexion' : 'Créer un compte'}
                   </Button>
                 </div>
               </div>
@@ -106,17 +106,17 @@ const Authentication = function ({ mongoContext: { app, user, setUser }, type })
         {isLogIn(type)
         && (
           <p>
-            Not registered?
+            Pas enregistré ?
             { ' ' }
-            <a href="/signup">Create an account.</a>
+            <a href="/signup">Créez un compte</a>
           </p>
         )}
         {!isLogIn(type)
         && (
           <p>
-            Already registered?
+            Déjà enregistré ?
             { ' ' }
-            <a href="/login">Log in.</a>
+            <a href="/login">Connectez-vous</a>
           </p>
         )}
       </div>
